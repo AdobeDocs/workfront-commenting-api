@@ -1,5 +1,5 @@
 - pathPrefix:
-    - /dev-docs-template/
+    - /workfront-commenting-api/
 
 - pages:
     - [Analytics](index.md)
