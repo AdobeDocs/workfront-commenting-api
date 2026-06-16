@@ -1,0 +1,1107 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Comment Stream API",
+    "version": "1.0",
+    "description": "The Comment Stream REST API v1 provides an HTTP JSON interface for creating, reading, updating, and deleting comments, replies, and reactions on objects across the Workfront and Adobe ecosystem (projects, tasks, documents, AEM assets, and other registered `objectCode` values).\n\nUse this API for stable server-to-server integrations. Product UIs may also call Comment Stream through GraphQL at `POST /api/graphql`.\n\n### API paths\n- **Gateway URL**: `https://workfront.adobe.io` (assigned during Adobe I/O onboarding; do not use internal cluster hostnames in customer integrations)\n- **Base path**: `/comment-stream/api/v1`\n- **Example URL**: `https://workfront.adobe.io/comment-stream/api/v1/comment`\n\n### Required headers\n- All calls require `Authorization` with an Adobe IMS OAuth 2.0 bearer token.\n- Include `x-api-key` with the API client ID from Adobe Developer Console.\n- For service-to-service tokens, also send `x-gw-ims-org-id` (or `wf-customerid`) and `wf-userid` (or `user-id`) so the service can enforce object access on behalf of the acting user.\n- The service validates tokens with IMS scope `workfront.comment-stream`.\n\n### Limits\n- List pagination: `limit` is capped at **500** per request.\n- Comment text: maximum **15,000** characters.\n- Author edit window: **15 minutes** after creation unless elevated permissions apply.\n\n### Forward compatibility\nClients should ignore unknown JSON fields in responses. New optional request fields may be added under v1 without a major version bump.",
+    "contact": {
+      "name": "Comment Stream",
+      "email": "comment-stream-support@adobe.com",
+      "url": "https://developer.adobe.com/workfront-apis/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://workfront.adobe.io/comment-stream",
+      "description": "Adobe I/O API Gateway URL for Comment Stream (hostname assigned during onboarding)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Comments",
+      "description": "Create, read, update, delete, and list comments and replies on Workfront and Adobe platform objects."
+    },
+    {
+      "name": "Reactions",
+      "description": "Add and remove reactions on comments."
+    }
+  ],
+  "paths": {
+    "/api/v1/comment": {
+      "parameters": [
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "get": {
+        "tags": ["Comments"],
+        "summary": "List comments",
+        "description": "List comments for an object with cursor-based pagination. Use `pageInfo.nextCursor` as the `cursor` query parameter on the next request.",
+        "operationId": "listComments",
+        "security": [{ "developer-console-auth": [] }],
+        "parameters": [
+          {
+            "name": "objectID",
+            "in": "query",
+            "required": true,
+            "description": "Object to list comments for.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "objectCode",
+            "in": "query",
+            "required": true,
+            "description": "Object type code (for example `PROJ`, `TASK`, `DOCU`).",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "description": "Page size (1–500). Values above 500 are capped server-side.",
+            "schema": { "type": "integer", "minimum": 1, "maximum": 500 }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Numeric timestamp cursor from `pageInfo.nextCursor` on a previous response.",
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "endCursor",
+            "in": "query",
+            "required": false,
+            "description": "Document ID cursor for advanced paging.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "required": false,
+            "description": "Filter comments by text content.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "URL-encoded JSON object matching the `CommentFilter` schema.",
+            "schema": { "type": "string" },
+            "example": "{\"authorID\":\"6400cae3000c141416060e29\",\"resolved\":false}"
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/CommentListResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Create comment",
+        "description": "Add a top-level comment on an object.",
+        "operationId": "createComment",
+        "security": [{ "developer-console-auth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateCommentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/CommentResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/v1/comment/bulk": {
+      "parameters": [
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Create comments in bulk",
+        "description": "Create the same comment payload on multiple objects. Bulk commenting is restricted to supported Redrock object types; unsupported types return `400`.",
+        "operationId": "createCommentsBulk",
+        "security": [{ "developer-console-auth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateBulkCommentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BulkCommentResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/v1/comment/{id}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/CommentId" },
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "get": {
+        "tags": ["Comments"],
+        "summary": "Get comment by ID",
+        "description": "Retrieve a comment by its 24-character hex ObjectId. Deleted comments may return a restricted payload without content fields.",
+        "operationId": "getCommentById",
+        "security": [{ "developer-console-auth": [] }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/CommentResponse" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "put": {
+        "tags": ["Comments"],
+        "summary": "Update comment",
+        "description": "Update comment content, tags, or attachments. Authors can edit within the configured 15-minute window unless they have elevated permissions.",
+        "operationId": "updateComment",
+        "security": [{ "developer-console-auth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateCommentRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/CommentResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "delete": {
+        "tags": ["Comments"],
+        "summary": "Delete comment",
+        "description": "Soft-delete a comment. The response includes `deleted`, `deletedBy`, and `deletedDate`.",
+        "operationId": "deleteComment",
+        "security": [{ "developer-console-auth": [] }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/CommentResponse" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/v1/comment/count": {
+      "parameters": [
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "get": {
+        "tags": ["Comments"],
+        "summary": "Get comments count",
+        "description": "Return the total non-deleted comment count for an object.",
+        "operationId": "getCommentsCount",
+        "security": [{ "developer-console-auth": [] }],
+        "parameters": [
+          {
+            "name": "objectID",
+            "in": "query",
+            "required": true,
+            "description": "Object to count comments for.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "objectCode",
+            "in": "query",
+            "required": true,
+            "description": "Object type code.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/CountResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/v1/commentPositionByDocumentID": {
+      "parameters": [
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "get": {
+        "tags": ["Comments"],
+        "summary": "Get comment position by document ID",
+        "description": "Return the 1-based position of a comment thread in an object's comment list.",
+        "operationId": "getCommentPositionByDocumentId",
+        "security": [{ "developer-console-auth": [] }],
+        "parameters": [
+          {
+            "name": "objectID",
+            "in": "query",
+            "required": true,
+            "description": "Parent object ID.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "documentID",
+            "in": "query",
+            "required": true,
+            "description": "Comment `documentID` to locate in the list.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "objectCode",
+            "in": "query",
+            "required": false,
+            "description": "Object type code (recommended for access checks).",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/PositionResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/v1/reply": {
+      "parameters": [
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Create reply",
+        "description": "Add a reply under a parent comment. `parentID` is required.",
+        "operationId": "createReply",
+        "security": [{ "developer-console-auth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateReplyRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/CommentResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/v1/reaction": {
+      "parameters": [
+        { "$ref": "#/components/parameters/ApiKey" },
+        { "$ref": "#/components/parameters/ImsOrgId" },
+        { "$ref": "#/components/parameters/WfUserId" },
+        { "$ref": "#/components/parameters/WfCustomerId" },
+        { "$ref": "#/components/parameters/RequestId" }
+      ],
+      "post": {
+        "tags": ["Reactions"],
+        "summary": "Add reaction",
+        "description": "Add a reaction of the given type to a comment.",
+        "operationId": "addReaction",
+        "security": [{ "developer-console-auth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReactionRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ReactionResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "put": {
+        "tags": ["Reactions"],
+        "summary": "Remove reaction",
+        "description": "Remove the caller's reaction of the given type from a comment.",
+        "operationId": "removeReaction",
+        "security": [{ "developer-console-auth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReactionRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ReactionDeleteResponse" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "developer-console-auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Adobe IMS OAuth 2.0 bearer token from Adobe Developer Console. Service tokens require scope `workfront.comment-stream`."
+      }
+    },
+    "parameters": {
+      "CommentId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Comment identifier (24-character hex MongoDB ObjectId).",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{24}$"
+        }
+      },
+      "ApiKey": {
+        "name": "x-api-key",
+        "in": "header",
+        "required": false,
+        "description": "API client ID from Adobe Developer Console.",
+        "schema": { "type": "string" }
+      },
+      "ImsOrgId": {
+        "name": "x-gw-ims-org-id",
+        "in": "header",
+        "required": false,
+        "description": "IMS organization ID (tenant). Required for service-to-service tokens.",
+        "schema": { "type": "string" }
+      },
+      "WfUserId": {
+        "name": "wf-userid",
+        "in": "header",
+        "required": false,
+        "description": "Workfront user ID on whose behalf the action runs. Required for service-to-service tokens.",
+        "schema": { "type": "string" }
+      },
+      "WfCustomerId": {
+        "name": "wf-customerid",
+        "in": "header",
+        "required": false,
+        "description": "Workfront customer (instance) ID. Alternative tenant header for service tokens.",
+        "schema": { "type": "string" }
+      },
+      "RequestId": {
+        "name": "x-request-id",
+        "in": "header",
+        "required": false,
+        "description": "Unique identifier for the request. Propagated in logs for support investigations.",
+        "schema": { "type": "string" }
+      }
+    },
+    "responses": {
+      "CommentResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Comment" }
+          }
+        }
+      },
+      "BulkCommentResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Comment" }
+            }
+          }
+        }
+      },
+      "CommentListResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/CommentList" }
+          }
+        }
+      },
+      "CountResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Total non-deleted comment count for the object."
+            }
+          }
+        }
+      },
+      "PositionResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "description": "1-based position of the comment thread in the object's list."
+            }
+          }
+        }
+      },
+      "ReactionResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ReactionRecord" }
+          }
+        }
+      },
+      "ReactionDeleteResponse": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ReactionDeleteAck" }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Validation failure, unsupported bulk operation, or bad input.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ValidationError" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing or invalid authentication.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorMessage" },
+            "example": { "message": "Unauthorized" }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Authenticated but not allowed on the object or comment.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Comment or resource not found.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorMessage" }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Unexpected server error.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorMessage" },
+            "example": { "message": "Something went wrong" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ErrorMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Human-readable explanation."
+          }
+        },
+        "required": ["message"],
+        "additionalProperties": false
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Human-readable validation message."
+          },
+          "validation": {
+            "type": "string",
+            "description": "Detailed validation message."
+          }
+        },
+        "required": ["message"],
+        "additionalProperties": false
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the tagged object."
+          },
+          "objCode": {
+            "type": "string",
+            "description": "Object code of the tagged entity (for example `USER`, `TEAM`)."
+          }
+        },
+        "required": ["id", "objCode"],
+        "additionalProperties": false
+      },
+      "Attachment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the attachment."
+          },
+          "type": {
+            "type": "string",
+            "description": "Attachment type (for example `image`, `document`)."
+          },
+          "name": {
+            "type": "string",
+            "description": "Attachment display name."
+          }
+        },
+        "required": ["id", "type", "name"],
+        "additionalProperties": false
+      },
+      "CommentMetadata": {
+        "type": "object",
+        "description": "Additional metadata such as rich text, proof, Frame.io, or login-as context.",
+        "additionalProperties": true,
+        "properties": {
+          "richTextContent": {
+            "type": "object",
+            "description": "Rich text content with formatting and entities.",
+            "additionalProperties": true
+          },
+          "frameioContent": {
+            "type": "object",
+            "description": "Frame.io integration content.",
+            "additionalProperties": false
+          },
+          "proofContent": {
+            "type": "object",
+            "properties": {
+              "proofCommentID": {
+                "type": "string",
+                "description": "Proof comment identifier."
+              }
+            },
+            "required": ["proofCommentID"],
+            "additionalProperties": false
+          },
+          "loginAs": {
+            "type": "object",
+            "properties": {
+              "loginAsUserID": {
+                "type": "string",
+                "description": "User ID being impersonated."
+              }
+            },
+            "required": ["loginAsUserID"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "CommentFilter": {
+        "type": "object",
+        "description": "Optional filters for listing comments. Pass as URL-encoded JSON in the `filter` query parameter.",
+        "properties": {
+          "authorID": {
+            "type": "string",
+            "description": "Filter by author user ID."
+          },
+          "startDate": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Start of date range (Unix timestamp)."
+          },
+          "endDate": {
+            "type": "integer",
+            "format": "int64",
+            "description": "End of date range (Unix timestamp)."
+          },
+          "resolved": {
+            "type": "boolean",
+            "description": "Filter by resolution state."
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "Filter by private comment visibility."
+          },
+          "externalRefID": {
+            "type": "string",
+            "description": "Filter by external reference ID."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tag" }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateCommentRequest": {
+        "type": "object",
+        "description": "Request body for creating a top-level comment.",
+        "properties": {
+          "objectID": {
+            "type": "string",
+            "description": "Target object ID."
+          },
+          "objectCode": {
+            "type": "string",
+            "description": "Object type code (for example `PROJ`, `TASK`, `DOCU`)."
+          },
+          "content": {
+            "type": "string",
+            "description": "Plain-text comment content (maximum 15,000 characters).",
+            "maxLength": 15000
+          },
+          "contentHTML": {
+            "type": "string",
+            "nullable": true,
+            "description": "HTML representation of the comment."
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "If true, visible only within the user's company."
+          },
+          "parentID": {
+            "type": "string",
+            "nullable": true,
+            "description": "Parent comment ID. Omit for top-level comments."
+          },
+          "externalRefID": {
+            "type": "string",
+            "nullable": true,
+            "description": "External correlation ID."
+          },
+          "documentID": {
+            "type": "string",
+            "nullable": true,
+            "description": "Document anchor when applicable."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tag" }
+          },
+          "attachments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Attachment" }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/CommentMetadata"
+          }
+        },
+        "required": ["content", "contentHTML", "objectID", "objectCode"],
+        "additionalProperties": false
+      },
+      "CreateBulkCommentRequest": {
+        "type": "object",
+        "description": "Request body for bulk comment creation on multiple objects.",
+        "properties": {
+          "objectIDs": {
+            "type": "array",
+            "description": "Array of target object IDs.",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "objectCode": {
+            "type": "string",
+            "description": "Object type code shared by all targets."
+          },
+          "content": {
+            "type": "string",
+            "description": "Plain-text comment content (maximum 15,000 characters).",
+            "maxLength": 15000
+          },
+          "contentHTML": {
+            "type": "string",
+            "nullable": true,
+            "description": "HTML representation of the comment."
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "If true, visible only within the user's company."
+          },
+          "parentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "externalRefID": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tag" }
+          },
+          "attachments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Attachment" }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/CommentMetadata"
+          }
+        },
+        "required": ["content", "contentHTML", "objectIDs", "objectCode"],
+        "additionalProperties": false
+      },
+      "CreateReplyRequest": {
+        "type": "object",
+        "description": "Request body for creating a reply to an existing comment.",
+        "properties": {
+          "parentID": {
+            "type": "string",
+            "description": "Parent comment ID."
+          },
+          "parentCommentID": {
+            "type": "string",
+            "description": "Alternate parent comment reference when applicable."
+          },
+          "objectID": {
+            "type": "string",
+            "description": "Object the parent comment belongs to."
+          },
+          "objectCode": {
+            "type": "string",
+            "description": "Object type code (for example `PROJ`, `TASK`, `OPTASK`, `USER`)."
+          },
+          "content": {
+            "type": "string",
+            "description": "Plain-text reply content (maximum 15,000 characters).",
+            "maxLength": 15000
+          },
+          "contentHTML": {
+            "type": "string",
+            "nullable": true,
+            "description": "HTML representation of the reply."
+          },
+          "externalRefID": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentID": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tag" }
+          },
+          "attachments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Attachment" }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/CommentMetadata"
+          }
+        },
+        "required": ["parentID", "content", "contentHTML", "objectID", "objectCode"],
+        "additionalProperties": false
+      },
+      "UpdateCommentRequest": {
+        "type": "object",
+        "description": "Request body for updating an existing comment.",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Updated plain-text content (maximum 15,000 characters).",
+            "maxLength": 15000
+          },
+          "contentHTML": {
+            "type": "string",
+            "nullable": true,
+            "description": "Updated HTML content."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tag" }
+          },
+          "attachments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Attachment" }
+          }
+        },
+        "required": ["content", "contentHTML"],
+        "additionalProperties": false
+      },
+      "ReactionRequest": {
+        "type": "object",
+        "description": "Request body for adding or removing a reaction.",
+        "properties": {
+          "commentID": {
+            "type": "string",
+            "description": "Target comment ID."
+          },
+          "type": {
+            "type": "string",
+            "description": "Reaction type (for example `LIKE`)."
+          },
+          "objectCode": {
+            "type": "string",
+            "description": "Optional object code for access checks."
+          }
+        },
+        "required": ["commentID", "type"],
+        "additionalProperties": false
+      },
+      "ReactionRecord": {
+        "type": "object",
+        "description": "Reaction added to a comment.",
+        "properties": {
+          "commentID": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "userID": {
+            "type": "string",
+            "description": "User who added the reaction."
+          }
+        },
+        "required": ["commentID", "type", "userID"],
+        "additionalProperties": true
+      },
+      "ReactionDeleteAck": {
+        "type": "object",
+        "description": "Acknowledgement of reaction removal.",
+        "properties": {
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "description": "Reaction type that was removed."
+          }
+        },
+        "required": ["acknowledged", "type"],
+        "additionalProperties": false
+      },
+      "PageInfo": {
+        "type": "object",
+        "description": "Cursor pagination metadata.",
+        "properties": {
+          "hasNextPage": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "description": "Pass as the `cursor` query parameter on the next request."
+          }
+        },
+        "required": ["hasNextPage"],
+        "additionalProperties": false
+      },
+      "CommentList": {
+        "type": "object",
+        "description": "Paginated list of comments for an object.",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Comment" }
+          },
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          }
+        },
+        "required": ["data", "pageInfo"],
+        "additionalProperties": false
+      },
+      "Comment": {
+        "type": "object",
+        "description": "Comment resource. Exact fields returned depend on `objectCode`, feature flags, and projection logic. Clients should tolerate unknown fields.",
+        "additionalProperties": true,
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Comment identifier (24-character hex ObjectId)."
+          },
+          "documentID": {
+            "type": "string",
+            "description": "Stable document key for threading and position."
+          },
+          "objectID": {
+            "type": "string",
+            "description": "Associated object ID."
+          },
+          "objectCode": {
+            "type": "string",
+            "description": "Associated object type code."
+          },
+          "parentID": {
+            "type": "string",
+            "nullable": true,
+            "description": "Parent comment ID for replies."
+          },
+          "parentCommentID": {
+            "type": "string",
+            "nullable": true,
+            "description": "Resolved parent comment reference."
+          },
+          "type": {
+            "type": "string",
+            "description": "Comment type discriminator."
+          },
+          "content": {
+            "type": "string",
+            "description": "Plain-text content."
+          },
+          "contentHTML": {
+            "type": "string",
+            "nullable": true,
+            "description": "HTML content."
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "Company-scoped visibility flag."
+          },
+          "authorID": {
+            "type": "string",
+            "description": "Author user ID."
+          },
+          "authorName": {
+            "type": "string",
+            "description": "Author display name when available."
+          },
+          "customerId": {
+            "type": "string",
+            "description": "Customer (tenant) identifier."
+          },
+          "companyID": {
+            "type": "string",
+            "description": "Company identifier when applicable."
+          },
+          "externalRefID": {
+            "type": "string",
+            "nullable": true,
+            "description": "External correlation ID."
+          },
+          "createdAt": {
+            "type": "number",
+            "description": "Creation timestamp (Unix milliseconds)."
+          },
+          "lastModifiedAt": {
+            "type": "number",
+            "description": "Last modification timestamp (Unix milliseconds)."
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "User ID of the last modifier."
+          },
+          "modified": {
+            "type": "boolean",
+            "description": "Whether the comment was edited after creation."
+          },
+          "edited": {
+            "type": "boolean",
+            "description": "Whether the comment content was edited."
+          },
+          "deleted": {
+            "type": "boolean",
+            "description": "Soft-delete flag."
+          },
+          "deletedBy": {
+            "type": "string",
+            "description": "User ID that deleted the comment."
+          },
+          "deletedDate": {
+            "type": "number",
+            "description": "Deletion timestamp (Unix milliseconds)."
+          },
+          "resolved": {
+            "type": "boolean",
+            "description": "Whether the comment thread is resolved."
+          },
+          "resolvedBy": {
+            "type": "string",
+            "description": "User ID that resolved the comment."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tag" }
+          },
+          "attachments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Attachment" }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/CommentMetadata"
+          },
+          "reactions": {
+            "type": "array",
+            "description": "Embedded reaction summaries when present.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "replies": {
+            "type": "array",
+            "description": "Nested replies when included in the projection.",
+            "items": { "$ref": "#/components/schemas/Comment" }
+          }
+        }
+      }
+    }
+  }
+}

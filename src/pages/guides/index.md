@@ -1,24 +1,57 @@
 ---
-title: Guides - Analytics
-description: This is the guides overview page of  Analytics 
+title: Getting Started
+description: Get started with the Workfront Comment Stream REST API v1
+keywords:
+  - Workfront Comment Stream
+  - commenting API
+  - getting started
+hideBreadcrumbNav: true
 ---
 
-# Get Started
+# Getting Started
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam malesuada feugiat enim vel facilisis. Nunc eget enim eu lacus lobortis tincidunt a nec est. Nunc quis sapien quis orci rutrum sollicitudin. Nullam vehicula ultricies mauris, id aliquam justo aliquam vitae. Nam quis tincidunt ante. Curabitur sagittis aliquam elit, at auctor enim maximus et. Praesent in lectus facilisis, tempor magna eget, bibendum est. In quis ornare mi. Donec vestibulum viverra magna, non mollis leo vestibulum sit amet. Aenean euismod nulla augue, sit amet vehicula nibh faucibus vel. Fusce at est lacus. Nullam ante nulla, elementum nec ornare in, placerat luctus enim. Suspendisse vitae lacinia nibh. Pellentesque porta accumsan est at volutpat. Nulla aliquam dictum faucibus.
+## Introducing the Comment Stream API
 
-## Authentication
+The **Comment Stream REST API v1** lets integrators programmatically manage comments, replies, and reactions on Workfront and Adobe platform objects. Use it when you need a stable HTTP resource model for server-to-server integrations.
 
-Mauris pellentesque ornare nulla. Proin fermentum elementum velit non consequat. Donec euismod nisl sed tellus sagittis, a consequat leo rhoncus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse neque justo, porttitor eget volutpat sed, suscipit nec mauris. Etiam nec egestas purus. Praesent suscipit in elit cursus consectetur. Duis blandit pulvinar odio, eget volutpat magna vestibulum interdum. Ut sed ultrices risus, vel gravida nisi. Sed vitae rutrum felis. Aliquam at eros molestie, sagittis augue sed, venenatis erat. Praesent at consectetur tellus, ut vehicula nunc. Pellentesque aliquet condimentum neque, fermentum consequat neque viverra vel. Aliquam accumsan dignissim turpis vitae consequat. Aenean id justo vel diam sollicitudin posuere. Sed eu mauris ac elit porta commodo et varius sem.
+## Before you begin
 
-## OAuth
+1. **[Authentication](authentication/index.md)** — Set up Adobe IMS OAuth 2.0 credentials in Adobe Developer Console and learn required request headers.
+2. **[Error handling](error-handling/index.md)** — Understand HTTP status codes and error response shapes.
+3. **[Limits](limits/index.md)** — Review pagination caps, content size limits, and the author edit window.
+4. **[API Reference](../api/index.md)** — Explore all endpoints interactively.
 
-Donec imperdiet tempus ligula, sit amet pellentesque justo pharetra quis. Duis sed lacus diam. Maecenas sollicitudin diam sit amet pharetra placerat. Aliquam egestas lectus et tellus sagittis, venenatis finibus nisi volutpat. Cras laoreet, nisl sed faucibus laoreet, nibh arcu pretium enim, eget elementum ligula tellus vitae lorem. Aenean consequat in lorem at venenatis. Phasellus consequat dolor in libero vulputate rutrum. Nulla sit amet augue fringilla, elementum libero eget, accumsan velit. Suspendisse et lorem ornare, congue justo vel, ultrices felis. Ut et aliquet eros. Nulla facilisi. Nulla vitae velit a enim egestas eleifend. Etiam malesuada orci non mollis vulputate. Praesent id augue eget sapien lobortis bibendum. Praesent placerat tellus dui, vel facilisis magna condimentum in.
+## Base URL
 
-<InlineAlert variant="info" slots="text"/>
+External customer requests go through the **Adobe I/O API Gateway** once the service is onboarded (same pattern as other Workfront public APIs).
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In urna tellus, fringilla sit amet lorem eget, dignissim pellentesque ligula. Donec nec dolor vitae leo laoreet aliquam vehicula at dui. Integer in tortor lacus. Aliquam convallis, lorem ac consectetur sodales, tellus.
+```
+https://workfront.adobe.io/comment-stream/api/v1
+```
 
-## JWT
+<InlineAlert variant="warning" slots="text"/>
 
-Donec imperdiet tempus ligula, sit amet pellentesque justo pharetra quis. Duis sed lacus diam. Maecenas sollicitudin diam sit amet pharetra placerat. Aliquam egestas lectus et tellus sagittis, venenatis finibus nisi volutpat. Cras laoreet, nisl sed faucibus laoreet, nibh arcu pretium enim, eget elementum ligula tellus vitae lorem. Aenean consequat in lorem at venenatis. Phasellus consequat dolor in libero vulputate rutrum. Nulla sit amet augue fringilla, elementum libero eget, accumsan velit. Suspendisse et lorem ornare, congue justo vel, ultrices felis. Ut et aliquet eros. Nulla facilisi. Nulla vitae velit a enim egestas eleifend. Etiam malesuada orci non mollis vulputate. Praesent id augue eget sapien lobortis bibendum. Praesent placerat tellus dui, vel facilisis magna condimentum in.
+The gateway hostname above is illustrative until Adobe I/O onboarding assigns the production `*.adobe.io` URL. Do not use internal cluster hostnames in customer integrations.
+
+## Quick example — create a comment
+
+```bash
+curl -X POST "https://workfront.adobe.io/comment-stream/api/v1/comment" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "x-api-key: $API_KEY" \
+  -H "x-gw-ims-org-id: $IMS_ORG_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objectID": "6400cae3000c141416060e29",
+    "objectCode": "PROJ",
+    "content": "Kickoff notes are ready for review.",
+    "contentHTML": "<p>Kickoff notes are ready for review.</p>",
+    "isPrivate": false
+  }'
+```
+
+A successful response (`200 OK`) returns a comment object including `_id`, `objectID`, `objectCode`, `content`, `contentHTML`, and audit fields.
+
+## Next steps
+
+Head to the [API Reference](../api/index.md) for the full endpoint catalog, or read the [Authentication guide](authentication/index.md) for token and header details.

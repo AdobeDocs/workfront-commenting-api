@@ -1,17 +1,29 @@
 ---
-title: Support - Analytics
-description: This is the support page of Analytics 
+title: Support
+description: Support and contact information for the Workfront Comment Stream API
+keywords:
+  - Workfront Comment Stream
+  - support
 ---
-
-<Superhero slots="heading, text" background="rgb(19, 93, 183)"/>
 
 # Support
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend ornare purus, vel dapibus augue suscipit in. 
+## Contact
 
-## Feedback
+For API integration questions and issues, contact the Comment Stream team:
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend ornare purus, vel dapibus augue suscipit in. Nam blandit vitae ante et auctor. Donec placerat egestas posuere. Aliquam erat volutpat. In condimentum massa eu pharetra porta. Nunc tempus massa sit amet nisl posuere sagittis. Mauris sit amet rhoncus neque. Phasellus ut vulputate est, vel auctor metus.
+- **Email:** comment-stream-support@adobe.com
 
-Donec tincidunt turpis in congue vulputate. Suspendisse potenti. Phasellus feugiat eros sem, tristique sollicitudin lacus consectetur id. Cras tortor orci, venenatis ac vulputate sit amet, auctor sed ex. Ut vel convallis felis. Etiam luctus, diam sed venenatis tincidunt, ipsum turpis volutpat eros, nec interdum arcu mi molestie dolor. Donec id mauris sed odio mollis viverra sed lobortis quam. Aliquam mi metus, ultricies sagittis hendrerit eget, volutpat vel dui. Proin id urna hendrerit, scelerisque arcu sit amet, egestas neque. Sed fringilla odio tincidunt sapien malesuada facilisis.
+## Related documentation
 
+- [Workfront Platform APIs](https://developer.adobe.com/workfront-apis/)
+- [Adobe Developer Console](https://developer.adobe.com/developer-console/)
+- [Workfront product documentation](https://experienceleague.adobe.com/docs/workfront.html)
+
+## Reporting issues
+
+When reporting an API issue, include:
+
+- `x-request-id` from the failing request (if available)
+- HTTP method, path, and response status code
+- Timestamp (UTC) and IMS org ID (do not include access tokens or secrets)
