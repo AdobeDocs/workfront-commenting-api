@@ -35,6 +35,24 @@ This guide assumes familiarity with:
 * Adobe IMS OAuth 2.0 and Adobe Developer Console project setup
 * Workfront object identifiers and `objectCode` values (for example `PROJ`, `TASK`, `DOCU`)
 
+## Supported object codes
+
+The `objectCode` parameter identifies the type of object a comment is attached to. The following codes are supported:
+
+| Platform | Object codes |
+|---|---|
+| **Workfront (Redrock)** | `PROJ`, `TASK`, `OPTASK`, `DOCU`, `PRGM`, `PORT`, `TMPL`, `TTSK`, `ITRN`, `USER`, `TSHET`, `GOAL`, `TEAMOB` |
+| **Boards** | `BOARD`, `CARD` |
+| **Maestro / Planning** | `RECORD` |
+| **GenStudio Approvals** | `GS_APPROVALS` |
+| **CJA** | `cjaProject`, `cjaProjectStage` |
+| **AEM** | `AEM` |
+| **ESS** | `ESS_SITE_APPROVALS` |
+| **Adobe Plays** | `plays` |
+| **AJO B2B Email** | `sapphire_email` |
+| **SharePoint** | `Sp_CommentObject` |
+| **Intake** | `intake-request` |
+
 ## Discover
 
 [Getting Started](guides/index.md)

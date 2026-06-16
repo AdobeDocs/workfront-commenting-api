@@ -3,19 +3,13 @@
   "info": {
     "title": "Comment Stream API",
     "version": "1.0",
-    "description": "The Comment Stream REST API v1 provides an HTTP JSON interface for creating, reading, updating, and deleting comments, replies, and reactions on objects across the Workfront and Adobe ecosystem (projects, tasks, documents, AEM assets, and other registered `objectCode` values).\n\nUse this API for stable server-to-server integrations. Product UIs may also call Comment Stream through GraphQL at `POST /api/graphql`.\n\n### API paths\n- **Gateway URL**: `https://workfront.adobe.io` (assigned during Adobe I/O onboarding; do not use internal cluster hostnames in customer integrations)\n- **Base path**: `/comment-stream/api/v1`\n- **Example URL**: `https://workfront.adobe.io/comment-stream/api/v1/comment`\n\n### Required headers\n- All calls require `Authorization` with an Adobe IMS OAuth 2.0 bearer token.\n- Include `x-api-key` with the API client ID from Adobe Developer Console.\n- For service-to-service tokens, also send `x-gw-ims-org-id` (or `wf-customerid`) and `wf-userid` (or `user-id`) so the service can enforce object access on behalf of the acting user.\n- The service validates tokens with IMS scope `workfront.comment-stream`.\n\n### Limits\n- List pagination: `limit` is capped at **500** per request.\n- Comment text: maximum **15,000** characters.\n- Author edit window: **15 minutes** after creation unless elevated permissions apply.\n\n### Forward compatibility\nClients should ignore unknown JSON fields in responses. New optional request fields may be added under v1 without a major version bump.",
+    "description": "The Comment Stream REST API v1 provides an HTTP JSON interface for creating, reading, updating, and deleting comments, replies, and reactions on objects across the Workfront and Adobe ecosystem (projects, tasks, documents, AEM assets, and other registered `objectCode` values).\n\nUse this API for stable server-to-server integrations. Product UIs may also call Comment Stream through GraphQL at `POST /api/graphql`.\n\n### API paths\n- **Base path**: `/comment-stream/api/v1`\n\n### Required headers\n- All calls require `Authorization` with an Adobe IMS OAuth 2.0 bearer token.\n- Include `x-api-key` with the API client ID from Adobe Developer Console.\n- For service-to-service tokens, also send `x-gw-ims-org-id` (or `wf-customerid`) and `wf-userid` (or `user-id`) so the service can enforce object access on behalf of the acting user.\n- The service validates tokens with IMS scope `workfront.comment-stream`.\n\n### Limits\n- List pagination: `limit` is capped at **500** per request.\n- Comment text: maximum **15,000** characters.\n- Author edit window: **15 minutes** after creation unless elevated permissions apply.\n\n### Forward compatibility\nClients should ignore unknown JSON fields in responses. New optional request fields may be added under v1 without a major version bump.",
     "contact": {
-      "name": "Comment Stream",
-      "email": "comment-stream-support@adobe.com",
-      "url": "https://developer.adobe.com/workfront-apis/"
+      "name": "Hasmik Gabrielyan",
+      "email": "hasmikg@adobe.com",
+      "url": "https://developer.adobe.com/workfront-commenting-api/"
     }
   },
-  "servers": [
-    {
-      "url": "https://workfront.adobe.io/comment-stream",
-      "description": "Adobe I/O API Gateway URL for Comment Stream (hostname assigned during onboarding)"
-    }
-  ],
   "tags": [
     {
       "name": "Comments",
@@ -53,8 +47,8 @@
             "name": "objectCode",
             "in": "query",
             "required": true,
-            "description": "Object type code (for example `PROJ`, `TASK`, `DOCU`).",
-            "schema": { "type": "string" }
+            "description": "Object type code identifying the parent object. See the [Supported object codes](../../index.md#supported-object-codes) table for all valid values.",
+            "schema": { "$ref": "#/components/schemas/ObjectCode" }
           },
           {
             "name": "limit",
@@ -242,8 +236,8 @@
             "name": "objectCode",
             "in": "query",
             "required": true,
-            "description": "Object type code.",
-            "schema": { "type": "string" }
+            "description": "Object type code identifying the parent object. See the [Supported object codes](../../index.md#supported-object-codes) table for all valid values.",
+            "schema": { "$ref": "#/components/schemas/ObjectCode" }
           }
         ],
         "responses": {
@@ -288,8 +282,8 @@
             "name": "objectCode",
             "in": "query",
             "required": false,
-            "description": "Object type code (recommended for access checks).",
-            "schema": { "type": "string" }
+            "description": "Object type code (recommended for access checks). See the [Supported object codes](../../index.md#supported-object-codes) table for all valid values.",
+            "schema": { "$ref": "#/components/schemas/ObjectCode" }
           }
         ],
         "responses": {
@@ -556,6 +550,23 @@
       }
     },
     "schemas": {
+      "ObjectCode": {
+        "type": "string",
+        "description": "Object type code identifying the parent object. Supported values by platform:\n\n**Workfront (Redrock):** `PROJ`, `TASK`, `OPTASK`, `DOCU`, `PRGM`, `PORT`, `TMPL`, `TTSK`, `ITRN`, `USER`, `TSHET`, `GOAL`, `TEAMOB`\n\n**Boards:** `BOARD`, `CARD`\n\n**Maestro / Planning:** `RECORD`\n\n**GenStudio Approvals:** `GS_APPROVALS`\n\n**CJA:** `cjaProject`, `cjaProjectStage`\n\n**AEM:** `AEM`\n\n**ESS:** `ESS_SITE_APPROVALS`\n\n**Adobe Plays:** `plays`\n\n**AJO B2B Email:** `sapphire_email`\n\n**SharePoint:** `Sp_CommentObject`\n\n**Intake:** `intake-request`",
+        "enum": [
+          "PROJ", "TASK", "OPTASK", "DOCU", "PRGM", "PORT", "TMPL", "TTSK", "ITRN", "USER", "TSHET", "GOAL", "TEAMOB",
+          "BOARD", "CARD",
+          "RECORD",
+          "GS_APPROVALS",
+          "cjaProject", "cjaProjectStage",
+          "AEM",
+          "ESS_SITE_APPROVALS",
+          "plays",
+          "sapphire_email",
+          "Sp_CommentObject",
+          "intake-request"
+        ]
+      },
       "ErrorMessage": {
         "type": "object",
         "properties": {
@@ -701,8 +712,7 @@
             "description": "Target object ID."
           },
           "objectCode": {
-            "type": "string",
-            "description": "Object type code (for example `PROJ`, `TASK`, `DOCU`)."
+            "$ref": "#/components/schemas/ObjectCode"
           },
           "content": {
             "type": "string",
@@ -759,8 +769,7 @@
             "minItems": 1
           },
           "objectCode": {
-            "type": "string",
-            "description": "Object type code shared by all targets."
+            "$ref": "#/components/schemas/ObjectCode"
           },
           "content": {
             "type": "string",
@@ -820,8 +829,7 @@
             "description": "Object the parent comment belongs to."
           },
           "objectCode": {
-            "type": "string",
-            "description": "Object type code (for example `PROJ`, `TASK`, `OPTASK`, `USER`)."
+            "$ref": "#/components/schemas/ObjectCode"
           },
           "content": {
             "type": "string",
