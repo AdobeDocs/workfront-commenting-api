@@ -1,7 +1,7 @@
 {
-  "total": 8,
+  "total": 7,
   "offset": 0,
-  "limit": 8,
+  "limit": 7,
   "data": [
     {
       "page": "/",
@@ -53,14 +53,6 @@
       "page": "/guides/limits/",
       "avatars": [
         "https://avatars.githubusercontent.com/u/35867035?v=4"
-      ],
-      "lastUpdated": "6/16/2026"
-    },
-    {
-      "page": "/support/",
-      "avatars": [
-        "https://avatars.githubusercontent.com/u/35867035?v=4",
-        "https://avatars.githubusercontent.com/u/41382203?v=4"
       ],
       "lastUpdated": "6/16/2026"
     }
