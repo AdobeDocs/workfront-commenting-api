@@ -26,20 +26,17 @@ The **Comment Stream REST API v1** lets integrators programmatically manage comm
 External customer requests go through the **Adobe I/O API Gateway** once the service is onboarded (same pattern as other Workfront public APIs).
 
 ```
-https://workfront.adobe.io/comment-stream/api/v1
+https://domain.my.workfront.com/comment-stream/api/v1
 ```
-
-<InlineAlert variant="warning" slots="text"/>
-
-The gateway hostname above is illustrative until Adobe I/O onboarding assigns the production `*.adobe.io` URL. Do not use internal cluster hostnames in customer integrations.
 
 ## Quick example — create a comment
 
 ```bash
-curl -X POST "https://workfront.adobe.io/comment-stream/api/v1/comment" \
+curl -X POST "https://domain.my.workfront.com/comment-stream/api/v1/comment" \
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H "x-api-key: $API_KEY" \
   -H "x-gw-ims-org-id: $IMS_ORG_ID" \
+  -H "wf-customerid: $WF_CUSTOMER_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "objectID": "6400cae3000c141416060e29",

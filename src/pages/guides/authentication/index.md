@@ -45,7 +45,7 @@ Workfront browser sessions may authenticate via `sessionid` cookie or `wf-auth` 
 ## First request — create a comment
 
 ```bash
-curl -X POST "https://workfront.adobe.io/comment-stream/api/v1/comment" \
+curl -X POST "https://domain.my.workfront.com/comment-stream/api/v1/comment" \
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H "x-api-key: $API_KEY" \
   -H "x-gw-ims-org-id: $IMS_ORG_ID" \
