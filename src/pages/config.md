@@ -4,8 +4,7 @@
 - pages:
   - [Comment Stream API](index.md)
   - [Getting Started](guides/index.md)
-  - API Reference
-  - [REST API v1](api/index.md)
+  - [API Reference](api/index.md)
   - [Support](support/index.md)
 
 - subPages:
