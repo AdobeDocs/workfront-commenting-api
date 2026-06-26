@@ -1,8 +1,8 @@
 ---
 title: Error handling
-description: HTTP status codes and error response shapes for the Workfront Comment Stream REST API v1
+description: HTTP status codes and error response shapes for the CXUE Commenting API v1
 keywords:
-  - Workfront Comment Stream
+  - CXUE Commenting
   - error handling
   - HTTP status codes
 ---

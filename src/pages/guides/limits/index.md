@@ -1,8 +1,8 @@
 ---
 title: Limits
-description: Pagination, content size, edit window, and rate limits for the Workfront Comment Stream REST API v1
+description: Pagination, content size, edit window, and rate limits for the CXUE Commenting API v1
 keywords:
-  - Workfront Comment Stream
+  - CXUE Commenting
   - limits
   - pagination
   - rate limits

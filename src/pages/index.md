@@ -1,9 +1,9 @@
 ---
 title: Overview - CXUE Commenting API
-description: An overview of the Workfront Comment Stream REST API for managing comments, replies, and reactions across Workfront and Adobe platform objects.
+description: An overview of the CXUE Commenting API for managing comments, replies, and reactions across Workfront and Adobe platform objects.
 keywords:
   - Workfront
-  - Comment Stream
+  - CXUE Commenting
   - commenting API
   - REST API
 hideBreadcrumbNav: true
@@ -11,11 +11,11 @@ hideBreadcrumbNav: true
 
 # CXUE Commenting API
 
-The Comment Stream REST API v1 provides an HTTP JSON interface for creating, reading, updating, and deleting comments, replies, and reactions on objects across the Workfront and Adobe ecosystem — projects, tasks, documents, AEM assets, and other registered `objectCode` values.
+The CXUE Commenting REST API v1 provides an HTTP JSON interface for creating, reading, updating, and deleting comments, replies, and reactions on objects across the Workfront and Adobe ecosystem — projects, tasks, documents, AEM assets, and other registered `objectCode` values.
 
 ## Overview
 
-Comment Stream is a unified commenting service for Workfront and Adobe platform objects. The REST v1 API exposes comment lifecycle operations with cursor-based pagination, object-level access control, and Adobe IMS OAuth 2.0 authentication.
+CXUE Commenting is a unified commenting service for Workfront and Adobe platform objects. The REST v1 API exposes comment lifecycle operations with cursor-based pagination, object-level access control, and Adobe IMS OAuth 2.0 authentication.
 
 All v1 endpoints are prefixed with `/api/v1/`. Breaking changes require a new major version; non-breaking additions (optional fields, new endpoints) can ship under v1.
 

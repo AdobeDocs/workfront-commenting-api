@@ -1,8 +1,8 @@
 ---
 title: Getting Started
-description: Get started with the Workfront Comment Stream REST API v1
+description: Get started with the CXUE Commenting API v1
 keywords:
-  - Workfront Comment Stream
+  - CXUE Commenting
   - commenting API
   - getting started
 hideBreadcrumbNav: true
@@ -10,9 +10,9 @@ hideBreadcrumbNav: true
 
 # Getting Started
 
-## Introducing the Comment Stream API
+## Introducing the CXUE Commenting API
 
-The **Comment Stream REST API v1** lets integrators programmatically manage comments, replies, and reactions on Workfront and Adobe platform objects. Use it when you need a stable HTTP resource model for server-to-server integrations.
+The **CXUE Commenting API v1** lets integrators programmatically manage comments, replies, and reactions on Workfront and Adobe platform objects. Use it when you need a stable HTTP resource model for server-to-server integrations.
 
 ## Before you begin
 

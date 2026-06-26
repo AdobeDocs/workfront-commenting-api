@@ -1,8 +1,8 @@
 ---
 title: Authentication
-description: Authenticate to the Workfront Comment Stream REST API with Adobe IMS OAuth 2.0
+description: Authenticate to the CXUE Commenting API with Adobe IMS OAuth 2.0
 keywords:
-  - Workfront Comment Stream
+  - CXUE Commenting
   - authentication
   - IMS
   - OAuth
@@ -10,7 +10,7 @@ keywords:
 
 # Authentication
 
-Comment Stream accepts Adobe IMS OAuth 2.0 bearer tokens on the `Authorization` header. Integrations should follow the [Adobe IMS Server-to-Server authentication guide](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/) to obtain access tokens.
+CXUE Commenting accepts Adobe IMS OAuth 2.0 bearer tokens on the `Authorization` header. Integrations should follow the [Adobe IMS Server-to-Server authentication guide](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/) to obtain access tokens.
 
 ## Required headers
 
