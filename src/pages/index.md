@@ -31,7 +31,7 @@ The `objectCode` parameter identifies the type of object a comment is attached t
 | **Adobe GenStudio**                     | `GS_APPROVALS` |
 | **Customer Journey Analytics**          | `cjaProject` |
 | **Adobe Experience Manager**            | `AEM` |
-| **ESS**                                 | `ESS_SITE_APPROVALS` |
+| **Experience Success Studio (ESS)**     | `ESS_SITE_APPROVALS` |
 | **Adobe Plays**                         | `plays` |
 | **Adobe Journey Optimizer B2B Edition** | `sapphire_email` |
 | **Workfront Intake**                    | `intake-request` |

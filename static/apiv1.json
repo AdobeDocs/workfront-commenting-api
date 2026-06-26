@@ -552,7 +552,7 @@
     "schemas": {
       "ObjectCode": {
         "type": "string",
-        "description": "Object type code identifying the parent object. Supported values by platform:\n\n**Workfront:** `PROJ`, `TASK`, `OPTASK`, `DOCU`, `PRGM`, `PORT`, `TMPL`, `TTSK`, `ITRN`, `USER`, `TSHET`, `GOAL`, `TEAMOB`\n\n**Workfront Boards:** `BOARD`, `CARD`\n\n**Adobe Workfront Planning:** `RECORD`\n\n**Adobe GenStudio:** `GS_APPROVALS`\n\n**Customer Journey Analytics:** `cjaProject`, `cjaProjectStage`\n\n**Adobe Experience Manager:** `AEM`\n\n**ESS:** `ESS_SITE_APPROVALS`\n\n**Adobe Plays:** `plays`\n\n**Adobe Journey Optimizer B2B Edition:** `sapphire_email`\n\n**Microsoft SharePoint:** `Sp_CommentObject`\n\n**Workfront Intake:** `intake-request`",
+        "description": "Object type code identifying the parent object. Supported values by platform:\n\n**Workfront:** `PROJ`, `TASK`, `OPTASK`, `DOCU`, `PRGM`, `PORT`, `TMPL`, `TTSK`, `ITRN`, `USER`, `TSHET`, `GOAL`, `TEAMOB`\n\n**Workfront Boards:** `BOARD`, `CARD`\n\n**Adobe Workfront Planning:** `RECORD`\n\n**Adobe GenStudio:** `GS_APPROVALS`\n\n**Customer Journey Analytics:** `cjaProject`, `cjaProjectStage`\n\n**Adobe Experience Manager:** `AEM`\n\n**Experience Success Studio (ESS):** `ESS_SITE_APPROVALS`\n\n**Adobe Plays:** `plays`\n\n**Adobe Journey Optimizer B2B Edition:** `sapphire_email`\n\n**Microsoft SharePoint:** `Sp_CommentObject`\n\n**Workfront Intake:** `intake-request`",
         "enum": [
           "PROJ", "TASK", "OPTASK", "DOCU", "PRGM", "PORT", "TMPL", "TTSK", "ITRN", "USER", "TSHET", "GOAL", "TEAMOB",
           "BOARD", "CARD",
