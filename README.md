@@ -1,4 +1,4 @@
-# Workfront Comment Stream API — developer.adobe.com
+# CXUE Commenting API — developer.adobe.com
 
 Customer-facing documentation site for the [Workfront Comment Stream REST API v1](https://developer.adobe.com/workfront-commenting-api/).
 

@@ -38,6 +38,10 @@ Service tokens include a `pac` claim. When using a service token you must supply
 
 The service validates the token against IMS with scope `workfront.comment-stream`.
 
+## Object access
+
+The default requirement for allowing comments on an object is that the user has view access to that object. If the resolved user does not have at least view permission on the target object, the API returns a `403 Forbidden` response.
+
 ## Session-based access (Workfront UI only)
 
 Workfront browser sessions may authenticate via `sessionid` cookie or `wf-auth` cookie through Kong. That path is for product UI traffic, not for third-party server integrations. **External integrators should use IMS OAuth only.**

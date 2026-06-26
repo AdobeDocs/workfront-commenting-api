@@ -1,5 +1,5 @@
 ---
-title: Overview - Workfront Comment Stream API
+title: Overview - CXUE Commenting API
 description: An overview of the Workfront Comment Stream REST API for managing comments, replies, and reactions across Workfront and Adobe platform objects.
 keywords:
   - Workfront
@@ -9,13 +9,13 @@ keywords:
 hideBreadcrumbNav: true
 ---
 
-# Workfront Comment Stream API
+# CXUE Commenting API
 
 The Comment Stream REST API v1 provides an HTTP JSON interface for creating, reading, updating, and deleting comments, replies, and reactions on objects across the Workfront and Adobe ecosystem — projects, tasks, documents, AEM assets, and other registered `objectCode` values.
 
 ## Overview
 
-Comment Stream is a unified commenting service for Workfront and Adobe platform objects. The REST v1 API exposes comment lifecycle operations with cursor-based list pagination, object-level access control, and Adobe IMS OAuth 2.0 authentication.
+Comment Stream is a unified commenting service for Workfront and Adobe platform objects. The REST v1 API exposes comment lifecycle operations with cursor-based pagination, object-level access control, and Adobe IMS OAuth 2.0 authentication.
 
 All v1 endpoints are prefixed with `/api/v1/`. Breaking changes require a new major version; non-breaking additions (optional fields, new endpoints) can ship under v1.
 
@@ -23,19 +23,18 @@ All v1 endpoints are prefixed with `/api/v1/`. Breaking changes require a new ma
 
 The `objectCode` parameter identifies the type of object a comment is attached to. The following codes are supported:
 
-| Platform | Object codes |
-|---|---|
-| **Workfront (Redrock)** | `PROJ`, `TASK`, `OPTASK`, `DOCU`, `PRGM`, `PORT`, `TMPL`, `TTSK`, `ITRN`, `USER`, `TSHET`, `GOAL`, `TEAMOB` |
-| **Boards** | `BOARD`, `CARD` |
-| **Maestro / Planning** | `RECORD` |
-| **GenStudio Approvals** | `GS_APPROVALS` |
-| **CJA** | `cjaProject`, `cjaProjectStage` |
-| **AEM** | `AEM` |
-| **ESS** | `ESS_SITE_APPROVALS` |
-| **Adobe Plays** | `plays` |
-| **AJO B2B Email** | `sapphire_email` |
-| **SharePoint** | `Sp_CommentObject` |
-| **Intake** | `intake-request` |
+| Platform                                | Object codes |
+|-----------------------------------------|---|
+| **Workfront**                           | `PROJ`, `TASK`, `OPTASK`, `DOCU`, `PRGM`, `PORT`, `TMPL`, `TTSK`, `ITRN`, `USER`, `TSHET`, `GOAL`, `TEAMOB` |
+| **Workfront Boards**                    | `BOARD`, `CARD` |
+| **Adobe Workfront Planning**            | `RECORD` |
+| **Adobe GenStudio**                     | `GS_APPROVALS` |
+| **Customer Journey Analytics**          | `cjaProject` |
+| **Adobe Experience Manager**            | `AEM` |
+| **ESS**                                 | `ESS_SITE_APPROVALS` |
+| **Adobe Plays**                         | `plays` |
+| **Adobe Journey Optimizer B2B Edition** | `sapphire_email` |
+| **Workfront Intake**                    | `intake-request` |
 
 ## Discover
 
