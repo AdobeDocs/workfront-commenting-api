@@ -26,13 +26,13 @@ The **CXUE Commenting API v1** lets integrators programmatically manage comments
 External customer requests go through the **Adobe I/O API Gateway** once the service is onboarded (same pattern as other Workfront public APIs).
 
 ```
-https://domain.my.workfront.com/comment-stream/api/v1
+https://domain.my.workfront.com/comments/api/v1
 ```
 
 ## Quick example — create a comment
 
 ```bash
-curl -X POST "https://domain.my.workfront.com/comment-stream/api/v1/comment" \
+curl -X POST "https://domain.my.workfront.com/comments/api/v1/comment" \
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H "x-api-key: $API_KEY" \
   -H "x-gw-ims-org-id: $IMS_ORG_ID" \
