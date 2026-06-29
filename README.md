@@ -1,6 +1,6 @@
-# CXUE Commenting API — developer.adobe.com
+# Adobe CX Commenting API — developer.adobe.com
 
-Customer-facing documentation site for the [CXUE Commenting API v1](https://developer.adobe.com/workfront-commenting-api/).
+Customer-facing documentation site for the [Adobe CX Commenting API v1](https://developer.adobe.com/workfront-commenting-api/).
 
 ## Source of truth
 

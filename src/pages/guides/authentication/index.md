@@ -1,8 +1,8 @@
 ---
 title: Authentication
-description: Authenticate to the CXUE Commenting API with Adobe IMS OAuth 2.0
+description: Authenticate to the Adobe CX Commenting API with Adobe IMS OAuth 2.0
 keywords:
-  - CXUE Commenting
+  - Adobe CX Commenting
   - authentication
   - IMS
   - OAuth
@@ -10,7 +10,7 @@ keywords:
 
 # Authentication
 
-CXUE Commenting accepts Adobe IMS OAuth 2.0 bearer tokens on the `Authorization` header. Integrations should follow the [Adobe IMS Server-to-Server authentication guide](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/) to obtain access tokens.
+The Adobe Customer Experience (CX) Commenting API accepts Adobe IMS OAuth 2.0 bearer tokens on the `Authorization` header. Integrations should follow the [Adobe IMS Server-to-Server authentication guide](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/) to obtain access tokens.
 
 ## Required headers
 

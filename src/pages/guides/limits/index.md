@@ -1,8 +1,8 @@
 ---
 title: Limits
-description: Pagination, content size, edit window, and rate limits for the CXUE Commenting API v1
+description: Pagination, content size, edit window, and rate limits for the Adobe CX Commenting API v1
 keywords:
-  - CXUE Commenting
+  - Adobe CX Commenting
   - limits
   - pagination
   - rate limits

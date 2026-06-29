@@ -1,8 +1,8 @@
 ---
 title: Error handling
-description: HTTP status codes and error response shapes for the CXUE Commenting API v1
+description: HTTP status codes and error response shapes for the Adobe CX Commenting API v1
 keywords:
-  - CXUE Commenting
+  - Adobe CX Commenting
   - error handling
   - HTTP status codes
 ---

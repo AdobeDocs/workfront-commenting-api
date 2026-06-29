@@ -2,7 +2,7 @@
   - /workfront-commenting-api/
 
 - pages:
-  - [CXUE Commenting API](index.md)
+  - [Adobe CX Commenting API](index.md)
   - [Getting Started](guides/index.md)
   - [API Reference](api/index.md)
 
