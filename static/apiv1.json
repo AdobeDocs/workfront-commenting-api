@@ -663,6 +663,23 @@
             },
             "required": ["loginAsUserID"],
             "additionalProperties": false
+          },
+          "objectMetadata": {
+            "type": "object",
+            "description": "Details of the object being commented on, used to populate Pulse notifications delivered to IMS Users in-app and via email.",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Display name of the object, shown in the notification."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL of the object, linked from the notification."
+              }
+            },
+            "required": ["name", "url"],
+            "additionalProperties": false
           }
         }
       },
