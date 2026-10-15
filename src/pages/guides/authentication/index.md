@@ -20,23 +20,11 @@ Include these headers on every request:
 |--------|----------|-------------|
 | `Authorization` | Yes | `Bearer <IMS_ACCESS_TOKEN>` |
 | `x-api-key` | Recommended | API client ID from Adobe Developer Console (used for logging and client identification) |
-| `x-gw-ims-org-id` | For service tokens | IMS organization ID (tenant) when using a service-to-service token |
-| `wf-userid` | For service tokens | Workfront user ID on whose behalf the action runs |
-| `wf-customerid` | For service tokens | Workfront customer (instance) ID, when applicable |
 | `Content-Type` | For bodies | `application/json` |
 
 ## User tokens
 
 Pass the end-user IMS token in `Authorization`. The service validates the token and resolves the user context for access checks.
-
-## Service tokens
-
-Service tokens include a `pac` claim. When using a service token you must supply tenant and user context headers so the service can enforce object access:
-
-- `x-gw-ims-org-id` or `wf-customerid` — tenant
-- `wf-userid` or `user-id` — acting user
-
-The service validates the token against IMS with scope `workfront.comment-stream`.
 
 ## Object access
 
@@ -52,7 +40,6 @@ Workfront browser sessions may authenticate via `sessionid` cookie or `wf-auth` 
 curl -X POST "https://domain.my.workfront.com/comments/api/v1/comment" \
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H "x-api-key: $API_KEY" \
-  -H "x-gw-ims-org-id: $IMS_ORG_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "objectID": "6400cae3000c141416060e29",
